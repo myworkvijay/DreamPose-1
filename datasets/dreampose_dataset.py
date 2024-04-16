@@ -32,7 +32,7 @@ class DreamPoseDataset(Dataset):
             raise ValueError("Instance images root doesn't exists.")
 
         # Load UBC Fashion Dataset
-        self.instance_images_path = glob.glob(instance_data_root+'/*png')
+        self.instance_images_path = glob.glob(instance_data_root+'/*jpg')
 
         self.num_instance_images = len(self.instance_images_path)
         self._length = self.num_instance_images
@@ -93,8 +93,8 @@ class DreamPoseDataset(Dataset):
         assert example["frame_i"].shape == (3, 640, 512)
 
         # Select other frame in this folder
-        frame_paths = glob.glob(frame_folder+'/*png')
-        frame_paths = [p for p in frame_paths if os.path.exists(p.replace('.png', '_densepose.npy'))]
+        frame_paths = glob.glob(frame_folder+'/*jpg')
+        frame_paths = [p for p in frame_paths if os.path.exists(p.replace('.jpg', '_densepose.npy'))]
         frame_j_path = np.random.choice(frame_paths)
 
         # load frame j
@@ -109,7 +109,7 @@ class DreamPoseDataset(Dataset):
         poses = []
         h, w = 640, 512
         for pose_number in range(5):
-            dp_path = frame_j_path.replace('.png', '_densepose.npy')
+            dp_path = frame_j_path.replace('.jpg', '_densepose.npy')
             dp_i = F.interpolate(torch.from_numpy(np.load(dp_path).astype('float32')).unsqueeze(0), (h, w), mode='bilinear').squeeze(0)
             poses.append(self.tensor_transforms(dp_i))
         input_pose = torch.cat(poses, 0)
