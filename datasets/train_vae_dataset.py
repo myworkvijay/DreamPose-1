@@ -32,10 +32,10 @@ class DreamPoseDataset(Dataset):
             raise ValueError("Instance images root doesn't exists.")
 
         # Load UBC Fashion Dataset
-        self.instance_images_path = [path for path in glob.glob(instance_data_root+'/*/*/*') if 'frame_i.png' in path]
+        self.instance_images_path = [path for path in glob.glob(instance_data_root+'/*/*/*') if 'frame_i.jpeg' in path]
 
         if len(self.instance_images_path) == 0:
-            self.instance_images_path = [path for path in glob.glob(instance_data_root+'/*') if 'png' in path]
+            self.instance_images_path = [path for path in glob.glob(instance_data_root+'/*') if 'jpeg' in path]
 
         len1 = len(self.instance_images_path)
         # Load Deep Fashion Dataset
@@ -104,7 +104,7 @@ class DreamPoseDataset(Dataset):
 
         # Load pose j
         h, w = self.size[0], self.size[1]
-        dp_path = self.instance_images_path[index % self.num_instance_images].replace('frame_i', 'frame_j').replace('.png', '_densepose.npy')
+        dp_path = self.instance_images_path[index % self.num_instance_images].replace('frame_i', 'frame_j').replace('.jpeg', '_densepose.npy')
         dp_j = F.interpolate(torch.from_numpy(np.load(dp_path, allow_pickle=True).astype('float32')).unsqueeze(0), (h, w), mode='bilinear').squeeze(0)
         
         # Load joints j
